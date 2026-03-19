@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vimal — Project Achievement Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --bg-card: #111827;
+    --bg-card-hover: #1a2332;
+    --text: #e2e8f0;
+    --text-muted: #8896ab;
+    --text-dim: #4a5568;
+    --accent-blue: #38bdf8;
+    --accent-emerald: #34d399;
+    --accent-amber: #fbbf24;
+    --accent-violet: #a78bfa;
+    --accent-rose: #fb7185;
+    --border: rgba(255,255,255,0.06);
+    --glow-blue: rgba(56, 189, 248, 0.15);
+    --glow-emerald: rgba(52, 211, 153, 0.15);
+    --glow-amber: rgba(251, 191, 36, 0.15);
+    --glow-violet: rgba(167, 139, 250, 0.15);
+    --glow-rose: rgba(251, 113, 133, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* Ambient gradient blobs */
+  .ambient {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .ambient-1 { width: 600px; height: 600px; background: var(--accent-blue); top: -200px; right: -100px; }
+  .ambient-2 { width: 500px; height: 500px; background: var(--accent-violet); bottom: -150px; left: -100px; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.8s ease-out;
+  }
+
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent-blue);
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    max-width: 650px;
+    line-height: 1.6;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .meta-item .meta-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: #fff;
+  }
+  .meta-item .meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 48px 0;
+    animation: fadeUp 0.8s ease-out 0.2s both;
+  }
+  .stat {
+    background: var(--bg-card);
+    padding: 28px 24px;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  .stat:hover { background: var(--bg-card-hover); }
+  .stat-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--accent-blue);
+    margin-bottom: 4px;
+  }
+  .stat-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── SECTION TITLE ─── */
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    padding-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ─── ACHIEVEMENT CARDS ─── */
+  .achievements {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 80px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    position: relative;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .card:hover {
+    border-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+  .card:hover::before { opacity: 1; }
+  .card.open { border-color: rgba(255,255,255,0.1); }
+  .card.open::before { opacity: 1; }
+
+  .card[data-color="blue"]::before { background: var(--accent-blue); }
+  .card[data-color="emerald"]::before { background: var(--accent-emerald); }
+  .card[data-color="amber"]::before { background: var(--accent-amber); }
+  .card[data-color="violet"]::before { background: var(--accent-violet); }
+  .card[data-color="rose"]::before { background: var(--accent-rose); }
+
+  .card[data-color="blue"]:hover, .card[data-color="blue"].open { box-shadow: 0 8px 40px var(--glow-blue); }
+  .card[data-color="emerald"]:hover, .card[data-color="emerald"].open { box-shadow: 0 8px 40px var(--glow-emerald); }
+  .card[data-color="amber"]:hover, .card[data-color="amber"].open { box-shadow: 0 8px 40px var(--glow-amber); }
+  .card[data-color="violet"]:hover, .card[data-color="violet"].open { box-shadow: 0 8px 40px var(--glow-violet); }
+  .card[data-color="rose"]:hover, .card[data-color="rose"].open { box-shadow: 0 8px 40px var(--glow-rose); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    padding: 28px 32px;
+    gap: 20px;
+  }
+
+  .card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    transition: transform 0.3s;
+  }
+  .card:hover .card-icon { transform: scale(1.08); }
+  .card[data-color="blue"] .card-icon { background: var(--glow-blue); }
+  .card[data-color="emerald"] .card-icon { background: var(--glow-emerald); }
+  .card[data-color="amber"] .card-icon { background: var(--glow-amber); }
+  .card[data-color="violet"] .card-icon { background: var(--glow-violet); }
+  .card[data-color="rose"] .card-icon { background: var(--glow-rose); }
+
+  .card-info { flex: 1; }
+
+  .card-category {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .card[data-color="blue"] .card-category { color: var(--accent-blue); }
+  .card[data-color="emerald"] .card-category { color: var(--accent-emerald); }
+  .card[data-color="amber"] .card-category { color: var(--accent-amber); }
+  .card[data-color="violet"] .card-category { color: var(--accent-violet); }
+  .card[data-color="rose"] .card-category { color: var(--accent-rose); }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    color: #fff;
+  }
+  .card-brief {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  .card-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s;
+    color: var(--text-muted);
+    font-size: 18px;
+  }
+  .card.open .card-toggle { transform: rotate(45deg); border-color: rgba(255,255,255,0.15); }
+
+  .card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card.open .card-body {
+    max-height: 800px;
+  }
+
+  .card-content {
+    padding: 0 32px 32px;
+    padding-left: 104px;
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .detail-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .detail-item h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .detail-item p {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .tech-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+  }
+
+  /* ─── TIMELINE ─── */
+  .timeline-wrapper {
+    position: relative;
+    padding: 0 0 48px;
+    margin-bottom: 16px;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 44px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 8px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent-blue), var(--accent-emerald), var(--accent-amber), var(--accent-violet), var(--accent-rose));
+    border-radius: 2px;
+    opacity: 0.5;
+  }
+
+  .tl-item {
+    position: relative;
+    padding-bottom: 36px;
+    animation: fadeUp 0.5s ease-out both;
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+
+  .tl-item:nth-child(1) { animation-delay: 0.15s; }
+  .tl-item:nth-child(2) { animation-delay: 0.25s; }
+  .tl-item:nth-child(3) { animation-delay: 0.35s; }
+  .tl-item:nth-child(4) { animation-delay: 0.45s; }
+  .tl-item:nth-child(5) { animation-delay: 0.55s; }
+  .tl-item:nth-child(6) { animation-delay: 0.65s; }
+  .tl-item:nth-child(7) { animation-delay: 0.75s; }
+  .tl-item:nth-child(8) { animation-delay: 0.85s; }
+
+  .tl-dot {
+    position: absolute;
+    left: -44px;
+    top: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 2;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .tl-item:hover .tl-dot {
+    transform: scale(1.15);
+  }
+
+  .tl-dot.dot-blue { background: var(--glow-blue); box-shadow: 0 0 0 3px var(--glow-blue); }
+  .tl-dot.dot-emerald { background: var(--glow-emerald); box-shadow: 0 0 0 3px var(--glow-emerald); }
+  .tl-dot.dot-amber { background: var(--glow-amber); box-shadow: 0 0 0 3px var(--glow-amber); }
+  .tl-dot.dot-violet { background: var(--glow-violet); box-shadow: 0 0 0 3px var(--glow-violet); }
+  .tl-dot.dot-rose { background: var(--glow-rose); box-shadow: 0 0 0 3px var(--glow-rose); }
+
+  .tl-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .tl-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .tl-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.55;
+    max-width: 600px;
+  }
+
+  .tl-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    margin-top: 8px;
+    margin-right: 4px;
+  }
+
+  .tl-item:hover .tl-title {
+    transition: color 0.3s;
+  }
+  .tl-item[data-tl-color="blue"]:hover .tl-title { color: var(--accent-blue); }
+  .tl-item[data-tl-color="emerald"]:hover .tl-title { color: var(--accent-emerald); }
+  .tl-item[data-tl-color="amber"]:hover .tl-title { color: var(--accent-amber); }
+  .tl-item[data-tl-color="violet"]:hover .tl-title { color: var(--accent-violet); }
+  .tl-item[data-tl-color="rose"]:hover .tl-title { color: var(--accent-rose); }
+
+  @media (max-width: 768px) {
+    .timeline { padding-left: 36px; }
+    .tl-dot { left: -36px; width: 28px; height: 28px; font-size: 12px; }
+    .tl-title { font-size: 1rem; }
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card { animation: fadeUp 0.6s ease-out both; }
+  .card:nth-child(1) { animation-delay: 0.1s; }
+  .card:nth-child(2) { animation-delay: 0.2s; }
+  .card:nth-child(3) { animation-delay: 0.3s; }
+  .card:nth-child(4) { animation-delay: 0.4s; }
+  .card:nth-child(5) { animation-delay: 0.5s; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    .hero { padding: 48px 0 40px; }
+    .hero h1 { font-size: 2rem; }
+    .card-header { padding: 20px; gap: 14px; }
+    .card-content { padding: 0 20px 24px; padding-left: 20px; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .hero-meta { gap: 24px; }
+    .card-icon { width: 44px; height: 44px; font-size: 18px; }
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: #fff; color: #1a1a1a; }
+    .ambient, body::before { display: none; }
+    .card { break-inside: avoid; box-shadow: none !important; border: 1px solid #ddd; }
+    .card-body { max-height: none !important; }
+    .card-toggle { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-label">Achievement Portfolio</div>
+    <h1>Project Contributions<br><em>& Technical Impact</em></h1>
+    <p class="hero-subtitle">
+      A summary of key technical achievements, innovations, and delivery contributions across SAP S/4HANA, RAP development, and integration workstreams.
+    </p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-value">17+</span>
+        <span class="meta-label">Years Experience</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-value">5</span>
+        <span class="meta-label">Key Workstreams</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-value">SAP S/4HANA</span>
+        <span class="meta-label">Platform Focus</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-number">1</div>
+      <div class="stat-desc">Developer Tool Built & Adopted Org-Wide</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">3+</div>
+      <div class="stat-desc">End-to-End RAP Applications Delivered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">Full Stack</div>
+      <div class="stat-desc">CDS → RAP → Fiori → Integration</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">AI + SAP</div>
+      <div class="stat-desc">Innovation at Intersection</div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="section-title">Project Journey</div>
+
+  <div class="timeline-wrapper">
+    <div class="timeline">
+
+      <div class="tl-item" data-tl-color="amber">
+        <div class="tl-dot dot-amber">📦</div>
+        <div class="tl-date">Q1 2024</div>
+        <div class="tl-title">Joined FLOG Workstream — Material Tracking</div>
+        <div class="tl-desc">Ramped up on SAP Field Logistics module. Delivered risk validation logic (IS_RISK_VALID) for SP11/SP14/SP15 supply processes and CDS value help views with search annotations.</div>
+        <span class="tl-tag">SAP FLOG</span><span class="tl-tag">CDS Views</span>
+      </div>
+
+      <div class="tl-item" data-tl-color="amber">
+        <div class="tl-dot dot-amber">🚩</div>
+        <div class="tl-date">Q1–Q2 2024</div>
+        <div class="tl-title">FLOG Milestones & Production Fixes</div>
+        <div class="tl-desc">Implemented RETURN_PENDING and SENT_FOR_POST_PROCES milestone classes. Diagnosed a composite key defect causing duplicate dropdown entries in production Fiori apps.</div>
+        <span class="tl-tag">Milestone Classes</span><span class="tl-tag">Fiori Debugging</span>
+      </div>
+
+      <div class="tl-item" data-tl-color="emerald">
+        <div class="tl-dot dot-emerald">🔄</div>
+        <div class="tl-date">Q2 2024</div>
+        <div class="tl-title">Asset Transfer RAP Application — Core Build</div>
+        <div class="tl-desc">Architected and built a full RAP managed BO for intra-company asset transfers with Excel upload (XCO library), BAPI integration, and CDS-based authorization.</div>
+        <span class="tl-tag">RAP</span><span class="tl-tag">BAPI Integration</span><span class="tl-tag">Excel Upload</span>
+      </div>
+
+      <div class="tl-item" data-tl-color="violet">
+        <div class="tl-dot dot-violet">🔗</div>
+        <div class="tl-date">Q3 2024</div>
+        <div class="tl-title">Event Mesh Integration & Approval Workflows</div>
+        <div class="tl-desc">Wired up SAP Event Mesh with outbound bindings and RAP Entity Events for real-time approval notifications. Debugged CPI connectivity and end-to-end message delivery issues.</div>
+        <span class="tl-tag">Event Mesh</span><span class="tl-tag">CPI</span><span class="tl-tag">Entity Events</span>
+      </div>
+
+      <div class="tl-item" data-tl-color="blue">
+        <div class="tl-dot dot-blue">⚡</div>
+        <div class="tl-date">Q3 2024</div>
+        <div class="tl-title">RAP Generator v1 — Personal Innovation Initiative</div>
+        <div class="tl-desc">Ideated and built an AI-powered code generator for RAP objects. Shipped first version on GitHub Pages with Cloudflare Workers backend and Claude API integration.</div>
+        <span class="tl-tag">Claude API</span><span class="tl-tag">Cloudflare Workers</span><span class="tl-tag">Innovation</span>
+      </div>
+
+      <div class="tl-item" data-tl-color="blue">
+        <div class="tl-dot dot-blue">🚀</div>
+        <div class="tl-date">Q4 2024</div>
+        <div class="tl-title">RAP Generator — Org-Wide Adoption & Feature Expansion</div>
+        <div class="tl-desc">Added SSE streaming, progressive tab rendering, "Take a Tour" onboarding, and "Report Issue" workflow. Upgraded to Claude Sonnet 4. Promoted within the SAP/ABAP community on LinkedIn.</div>
+        <span class="tl-tag">SSE Streaming</span><span class="tl-tag">UX Iterations</span><span class="tl-tag">Org Adoption</span>
+      </div>
+
+      <div class="tl-item" data-tl-color="rose">
+        <div class="tl-dot dot-rose">🔍</div>
+        <div class="tl-date">Q4 2024 – Q1 2025</div>
+        <div class="tl-title">CFIN Scenario Debugging & Resolution</div>
+        <div class="tl-desc">[Add your specific CFIN debugging timeline — e.g., when you investigated replication errors, resolved mapping conflicts, or unblocked critical financial processes.]</div>
+        <span class="tl-tag">CFIN</span><span class="tl-tag">Complex Debugging</span>
+      </div>
+
+      <div class="tl-item" data-tl-color="blue">
+        <div class="tl-dot dot-blue">🧠</div>
+        <div class="tl-date">2025 — Ongoing</div>
+        <div class="tl-title">ABAPLens & Next-Gen SAP Developer Tools</div>
+        <div class="tl-desc">Expanding the innovation portfolio with ABAPLens — featuring Reverse Spec Generator, Visual Flow Mapper, Impact Blast Radius, and Test Case Generator for the SAP developer ecosystem.</div>
+        <span class="tl-tag">ABAPLens</span><span class="tl-tag">Micro-SaaS</span><span class="tl-tag">AI + SAP</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ACHIEVEMENTS -->
+  <div class="section-title">Key Achievements</div>
+
+  <div class="achievements">
+
+    <!-- 1. RAP Generator -->
+    <div class="card" data-color="blue" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-icon">⚡</div>
+        <div class="card-info">
+          <div class="card-category">Innovation & Tooling</div>
+          <div class="card-title">RAP Code Generator — AI-Powered Developer Tool</div>
+          <div class="card-brief">Built from scratch and adopted across the organization for accelerating ABAP RAP development</div>
+        </div>
+        <div class="card-toggle">+</div>
+      </div>
+      <div class="card-body">
+        <div class="card-content">
+          <div class="detail-grid">
+            <div class="detail-item">
+              <h4>What I Built</h4>
+              <p>A web-based tool hosted on GitHub Pages with a Cloudflare Worker backend that uses AI (Claude API) to auto-generate CDS views, Behavior Definitions, Handler Classes, and Projections from natural-language prompts.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Impact</h4>
+              <p>Adopted by developers across the organization. Significantly reduces boilerplate coding time for RAP objects, enabling the team to focus on business logic rather than repetitive scaffolding.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Key Features Delivered</h4>
+              <p>SSE streaming with progressive tab rendering, token exhaustion handling, guided "Take a Tour" onboarding, "Report Issue" workflow (FormSubmit.co), and upgrade to Claude Sonnet 4 with expanded token limits.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Ownership</h4>
+              <p>End-to-end — ideation, architecture, frontend, backend proxy, API integration, UX iterations, internal promotion, and ongoing maintenance. This was a personal initiative that grew into an org-level asset.</p>
+            </div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Claude API</span>
+            <span class="tech-tag">GitHub Pages</span>
+            <span class="tech-tag">Cloudflare Workers</span>
+            <span class="tech-tag">SSE Streaming</span>
+            <span class="tech-tag">JavaScript</span>
+            <span class="tech-tag">RAP / CDS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Asset Transfer RAP Application -->
+    <div class="card" data-color="emerald" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-icon">🔄</div>
+        <div class="card-info">
+          <div class="card-category">RAP Application Development</div>
+          <div class="card-title">Intra-Company Asset Transfer Application</div>
+          <div class="card-brief">Full-lifecycle RAP solution with Excel upload, BAPI integration, approval workflows, and event-driven notifications</div>
+        </div>
+        <div class="card-toggle">+</div>
+      </div>
+      <div class="card-body">
+        <div class="card-content">
+          <div class="detail-grid">
+            <div class="detail-item">
+              <h4>What I Built</h4>
+              <p>A RAP-based application enabling intra-company asset transfers with Excel file upload, BAPI integration (BAPI_ASSET_TRANSFER_POST, BAPI_FIXEDASSET_CHANGE), multi-level approval workflows, and background processing via Application Jobs.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Impact</h4>
+              <p>Streamlined a previously manual and error-prone process into a governed, auditable digital workflow with real-time notifications and status tracking, reducing processing time and eliminating data inconsistencies.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Integration Layer</h4>
+              <p>Connected approval events with SAP Event Mesh for real-time notifications. Implemented RAP Entity Events for loose coupling. Built mass asset acquisition (ABSOL) upload tool as an extension.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Technical Depth</h4>
+              <p>Comprehensive validation framework using XCO library for Excel parsing, CDS-based authorization with PFCG integration, and Application Jobs for asynchronous processing of large transfer batches.</p>
+            </div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">RAP (Managed BO)</span>
+            <span class="tech-tag">CDS Views</span>
+            <span class="tech-tag">BAPI Integration</span>
+            <span class="tech-tag">Application Jobs</span>
+            <span class="tech-tag">Event Mesh</span>
+            <span class="tech-tag">Excel Upload / XCO</span>
+            <span class="tech-tag">Fiori Elements</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. SAP FLOG / S4HANA -->
+    <div class="card" data-color="amber" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-icon">📦</div>
+        <div class="card-info">
+          <div class="card-category">SAP FLOG / S/4HANA Delivery</div>
+          <div class="card-title">Field Logistics Module — Material Tracking & Milestones</div>
+          <div class="card-brief">End-to-end FLOG development including risk validation, milestone classes, CDS value help, and Fiori UX enhancements</div>
+        </div>
+        <div class="card-toggle">+</div>
+      </div>
+      <div class="card-body">
+        <div class="card-content">
+          <div class="detail-grid">
+            <div class="detail-item">
+              <h4>What I Delivered</h4>
+              <p>Implemented material tracking developments in the SAP FLOG module: risk validation logic (IS_RISK_VALID for SP11/SP14/SP15 supply processes), RETURN_PENDING milestone class implementation, and milestone triggering behavior for SENT_FOR_POST_PROCES.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Impact</h4>
+              <p>Ensured field logistics workflows executed correctly at critical supply chain checkpoints. Resolved production-impacting issues like duplicate values in CDS value help views by identifying missing composite key fields (Profile ID).</p>
+            </div>
+            <div class="detail-item">
+              <h4>Fiori & UX Work</h4>
+              <p>Implemented Fiori field visibility controls, CDS value help views with search annotations for intuitive user lookups, and debugged non-breaking space issues in importing parameters that caused data mismatches.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Problem Solving</h4>
+              <p>Deep-dived into complex milestone triggering scenarios, tracing logic across multiple framework layers. Diagnosed and fixed a subtle composite key defect that caused duplicate dropdown entries in production Fiori apps.</p>
+            </div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">SAP FLOG</span>
+            <span class="tech-tag">S/4HANA</span>
+            <span class="tech-tag">CDS Value Help</span>
+            <span class="tech-tag">Fiori Elements</span>
+            <span class="tech-tag">Milestone Classes</span>
+            <span class="tech-tag">Risk Validation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Event Mesh / Integration -->
+    <div class="card" data-color="violet" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-icon">🔗</div>
+        <div class="card-info">
+          <div class="card-category">Integration & Event-Driven Architecture</div>
+          <div class="card-title">SAP Event Mesh & CPI Integration</div>
+          <div class="card-brief">Designed and implemented event-driven communication between SAP BTP applications and downstream systems</div>
+        </div>
+        <div class="card-toggle">+</div>
+      </div>
+      <div class="card-body">
+        <div class="card-content">
+          <div class="detail-grid">
+            <div class="detail-item">
+              <h4>What I Delivered</h4>
+              <p>Set up SAP Event Mesh integration with outbound bindings and topic configuration for real-time event propagation. Configured RAP Entity Events to publish business events upon approval actions in custom applications.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Impact</h4>
+              <p>Enabled real-time, event-driven workflows replacing batch-based polling, resulting in faster notification delivery and reduced system coupling between BTP apps and on-premise systems.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Debugging & Problem Solving</h4>
+              <p>Diagnosed and resolved CPI connectivity issues with Event Mesh — traced problems through message queues, topic subscriptions, and integration flow configurations to ensure end-to-end message delivery.</p>
+            </div>
+            <div class="detail-item">
+              <h4>Architecture Contribution</h4>
+              <p>Established reusable patterns for event-driven communication in RAP-based applications. Documented outbound binding setup, topic naming conventions, and error-handling strategies for the team.</p>
+            </div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">SAP Event Mesh</span>
+            <span class="tech-tag">SAP BTP</span>
+            <span class="tech-tag">CPI (Cloud Integration)</span>
+            <span class="tech-tag">RAP Entity Events</span>
+            <span class="tech-tag">Outbound Bindings</span>
+            <span class="tech-tag">Topic Configuration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. CFIN Debugging -->
+    <div class="card" data-color="rose" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-icon">🔍</div>
+        <div class="card-info">
+          <div class="card-category">Complex Debugging & Analysis</div>
+          <div class="card-title">CFIN Scenario Debugging & Resolution</div>
+          <div class="card-brief">Investigated and resolved complex Central Finance replication and mapping scenarios</div>
+        </div>
+        <div class="card-toggle">+</div>
+      </div>
+      <div class="card-body">
+        <div class="card-content">
+          <div class="detail-grid">
+            <div class="detail-item">
+              <h4>What I Did</h4>
+              <p>[Add your specific CFIN debugging scenarios here — e.g., replication errors, mapping rule conflicts, AIF message debugging, or reconciliation issues you resolved.]</p>
+            </div>
+            <div class="detail-item">
+              <h4>Impact</h4>
+              <p>[Describe the business impact — e.g., unblocked go-live, resolved data discrepancies affecting financial reporting, reduced open error queue items.]</p>
+            </div>
+            <div class="detail-item">
+              <h4>Approach</h4>
+              <p>[Detail your debugging methodology — e.g., SLT tracing, CFIN error analysis, mapping rule correction, coordination with functional teams.]</p>
+            </div>
+            <div class="detail-item">
+              <h4>Complexity</h4>
+              <p>[Explain what made these scenarios challenging — e.g., cross-system dependencies, data volume, timing issues, undocumented behaviors.]</p>
+            </div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Central Finance (CFIN)</span>
+            <span class="tech-tag">SLT Replication</span>
+            <span class="tech-tag">AIF Monitoring</span>
+            <span class="tech-tag">Mapping Rules</span>
+            <span class="tech-tag">S/4HANA Finance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    Prepared for Talent Discussion &middot; Confidential
+  </footer>
+
+</div>
+
+<script>
+  function toggleCard(card) {
+    const wasOpen = card.classList.contains('open');
+    // Close all cards
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('open'));
+    // Toggle clicked card
+    if (!wasOpen) card.classList.add('open');
+  }
+
+  // Allow opening multiple cards with Shift+Click
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', function(e) {
+      if (e.shiftKey) {
+        e.stopPropagation();
+        this.classList.toggle('open');
+      }
+    }, true);
+  });
+</script>
+
+</body>
+</html>
